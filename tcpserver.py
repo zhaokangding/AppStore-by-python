@@ -1,4 +1,5 @@
 from socket import * # 引入套接字模块
+import json
 
 install = "ZRW get install"
 uninstall = "ZRW uninstall"
@@ -17,7 +18,7 @@ def handle_command(connectionSocket, command):
     '''
     command_type = command[0:len(command) - command[::-1].find(" ") - 1]
     # 按照不同的指令类型进行不同测处理
-    if command_type ==install:
+    if command_type == install:
         apkname = command[len(command) - command[::-1].find(" ") : -1]
         handle_install(connectionSocket, apkname)
         return 1
@@ -59,7 +60,26 @@ def handle_change_source(connectionSocket, new_source):
     '''
         TODO: 完成修改软件源
     '''
-    pass
+    new_dict = create_dic(new_source)
+    json_dict = json.dumps(new_dict)
+    byte_dict = json_dict.encode('utf-8')
+
+    len_dict = len(byte_dict)
+    connectionSocket.send(str(len_dict).encode('utf-8'))
+    
+    size = 0 
+    while len_dict > 0:
+        if len_dict > 1024:    
+            data = byte_dict[size*1024:(size+1)*1024]
+            connectionSocket.send(data)
+            len_dict -= 1024
+            size += 1
+        else:
+            data = byte_dict[size*1024:]
+            connectionSocket.send(data)
+            len_dict = 0
+            break
+
 
 
 def handle_find(connectonSocket, info):
