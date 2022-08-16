@@ -17,7 +17,7 @@ def handle_command(connectionSocket, command):
     '''
     command_type = command[0:len(command) - command[::-1].find(" ") - 1]
     # 按照不同的指令类型进行不同测处理
-    if command_type == install:
+    if command_type ==install:
         apkname = command[len(command) - command[::-1].find(" ") : -1]
         handle_install(connectionSocket, apkname)
         return 1
