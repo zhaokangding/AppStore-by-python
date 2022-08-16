@@ -26,6 +26,27 @@ def file_recv(clientSocket, filename, filesize):
     except:
         return -1
 
+def dict_recv(clientSocket):
+    '''
+    接收字典
+    :param clientSocket: 套接字接口
+    :param dict_name: 字典名
+    :dict_size: 字典大小
+    '''
+    size = 0
+    len_dict = int(clientSocket.recv(1024).decode())
+    dict_new = ''
+    while len_dict > 0:
+        if len_dict >= 1024:
+            dict_temp = clientSocket.recv(1024).decode()
+            dict_new += dict_temp
+            len_dict -= 1024
+        else:
+            dict_temp = clientSocket.recv(len_dict).decode()
+            dict_new += dict_temp
+            len_dict = 0
+    return json.loads(dict_new)
+        
 
 while True:
     clientSocket = socket(AF_INET, SOCK_STREAM) # 创建一个套接字，第一个参数指示底层网络使用IPv4地址，第二个参数指示该套接字是SOCK_STREAM类型，这表明它是一个TCP套接字
