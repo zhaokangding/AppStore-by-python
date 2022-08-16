@@ -41,11 +41,17 @@ def handle_install(connectionSocket, apkname):
     :param apkname: 安装包名字
     :return: 成功返回 1 否则返回 -1
     '''
-
+        
     '''
         TODO:  基于软件源或者基于开源工具
     '''
-    pass
+    if apkname in dic:                                                          #判断是否在字典中
+        path = dic[apkname]['local']
+        filesize = os.path.getsize(path)
+        file_send(connectionSocket, path, filesize)
+        return 1        
+    else:
+        return -1
 
 
 
